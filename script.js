@@ -31,4 +31,3 @@ function decryptText(text) {
     }
     return decrypted;
 }
-
