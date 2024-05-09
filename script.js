@@ -1,35 +1,41 @@
-    const key = {
-        'a': 'x', 'b': 'q', 'c': 'w', 'd': 'e', 'e': 'r', 'f': 't', 'g': 'y', 'h': 'u', 'i': 'i', 'j': 'o', 'k': 'p', 'l': 'a', 'm': 's',
-        'n': 'd', 'o': 'f', 'p': 'g', 'q': 'h', 'r': 'j', 's': 'k', 't': 'l', 'u': 'z', 'v': 'x', 'w': 'c', 'x': 'v', 'y': 'b', 'z': 'n',
-        'A': 'X', 'B': 'Q', 'C': 'W', 'D': 'E', 'E': 'R', 'F': 'T', 'G': 'Y', 'H': 'U', 'I': 'I', 'J': 'O', 'K': 'P', 'L': 'A', 'M': 'S',
-        'N': 'D', 'O': 'F', 'P': 'G', 'Q': 'H', 'R': 'J', 'S': 'K', 'T': 'L', 'U': 'Z', 'V': 'X', 'W': 'C', 'X': 'V', 'Y': 'B', 'Z': 'N',
-        ' ': ' ', '.': '.', ',': ',', '?': '?', '!': '!', ';': ';', ':': ':', '(': '(', ')': ')', '[': '[', ']': ']', '{': '{', '}': '}',
-        '-': '-', '_': '_', '/': '/', '\\': '\\', '|': '|', '*': '*', '&': '&', '^': '^', '%': '%', '$': '$', '#': '#', '@': '@', '=': '=',
-        '+': '+', '<': '<', '>': '>', '"': '"', '\'': '\''
-    };
-
-    function encryptText(text) {
-        return text.split('').map(char => key[char] || char).join('');
+// Função para obter a chave de descriptografia do localStorage, ou gerar uma nova
+function getDecryptionKey() {
+    let key = localStorage.getItem('decryptionKey');
+    if (!key) {
+        key = generateDecryptionKey();
+        localStorage.setItem('decryptionKey', key);
     }
+    return key;
+}
 
-    function decryptText(text) {
-        const reverseKey = {};
-        for (let k in key) {
-            reverseKey[key[k]] = k;
-        }
-        return text.split('').map(char => reverseKey[char] || char).join('');
+// Função para gerar uma chave de descriptografia aleatória
+function generateDecryptionKey() {
+    const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,?!;:()[]{}-_/\\|*&^%$#@=+<>\"\'';
+    let shuffledAlphabet = alphabet.split('').sort(() => Math.random() - 0.5).join('');
+    let reverseAlphabet = alphabet.split('').reverse().join('');
+    let key = {};
+    for (let i = 0; i < alphabet.length; i++) {
+        key[shuffledAlphabet[i]] = reverseAlphabet[i];
     }
+    return key;
+}
 
-    const encryptButton = document.getElementById('encryptButton');
-    encryptButton.addEventListener('click', () => {
-        const inputText = document.getElementById('inputText').value;
-        const outputText = encryptText(inputText);
-        document.getElementById('outputText').textContent = outputText;
-    });
+// Função para descriptografar o texto usando a chave de descriptografia
+function decryptText(text, key) {
+    return text.split('').map(char => key[char] || char).join('');
+}
 
-    const decryptButton = document.getElementById('decryptButton');
-    decryptButton.addEventListener('click', () => {
-        const inputText = document.getElementById('inputText').value;
-        const outputText = decryptText(inputText);
-        document.getElementById('outputText').textContent = outputText;
-    });
+// Obter a chave de descriptografia
+const decryptionKey = getDecryptionKey();
+
+// Event listener para o botão de descriptografar
+decryptButton.addEventListener('click', () => {
+    const inputText = document.getElementById('inputText').value;
+    const outputText = decryptText(inputText, decryptionKey);
+    document.getElementById('outputText').textContent = outputText;
+});
+
+// Exemplo de uso da função de descriptografia
+const encryptedText = 'Texto criptografado';
+const decryptedText = decryptText(encryptedText, decryptionKey);
+console.log(decryptedText); // Saída: 'Texto descriptografado'
