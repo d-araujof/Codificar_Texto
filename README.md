@@ -1,4 +1,4 @@
-![img](https://d-araujof.github.io/Portifolio/img/projetos/portifolio.png)
+![img](https://github.com/d-araujof/Codificar_Texto/blob/2fb3645928c1e37121b5241118967f755894a3aa/img/Codificar_texto.png)
 
 Você pode acessá-lo com este [link.](https://d-araujof.github.io/Codificar_Texto/)
 
